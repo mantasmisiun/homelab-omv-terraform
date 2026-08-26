@@ -21,3 +21,10 @@ jobs:
       - run: terraform init -backend=false
 
       - run: terraform validate
+      
+      - uses: terraform-linters/setup-tflint@v4
+
+      - run: tflint --init
+
+      - run: tflint
+
