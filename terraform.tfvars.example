@@ -1,0 +1,27 @@
+zone_id       = "zone_id"
+tunnel_id     = "tunnel_id"
+ssh_subdomain = "ssh-subdomain"
+domain        = "domain"
+omv_ip = "ip"
+timezone = "timezone"
+
+traefik_cf_token              = "cf_token"
+traefik_dashboard_credentials = "traefik_dashboard_credentials"
+
+raid_root     = "/raid/1"
+ssd_root      = "/ssd/1"
+
+papra_auth_secret = "papra1secrete"
+
+glance_ha_token   = "HA_token"
+glance_immich_key = "immich_key"
+
+vaultwarden_admin_token   = "vaultwarden_token"
+vaultwarden_smtp_from     = "email"
+vaultwarden_smtp_username = "email"
+vaultwarden_smtp_password = "google_app_password"
+
+immich_db_password = "db_password"
+
+dockerhub_username = "username"
+dockerhub_token = "token"
