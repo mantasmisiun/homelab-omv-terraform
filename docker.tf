@@ -1,7 +1,7 @@
 provider "docker" {
   host = "ssh://root@${var.omv_ip}"
   registry_auth {
-    address = "registry-1.docker.io"
+    address  = "registry-1.docker.io"
     username = var.dockerhub_username
     password = var.dockerhub_token
   }

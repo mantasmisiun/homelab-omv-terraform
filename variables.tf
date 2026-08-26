@@ -108,13 +108,13 @@ variable "traefik_dashboard_credentials" {
 }
 
 variable "dockerhub_username" {
-    type = string
-    description = "Account username on docker hub"
-    sensitive = true
+  type        = string
+  description = "Account username on docker hub"
+  sensitive   = true
 }
 
 variable "dockerhub_token" {
-    type = string
-    description = "Personal access token created on docker hub for reading public repositories"
-    sensitive = true
+  type        = string
+  description = "Personal access token created on docker hub for reading public repositories"
+  sensitive   = true
 }
