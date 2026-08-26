@@ -11,7 +11,7 @@ module "glance_agent" {
 
   bind_mounts = [
     { host_path = "/", container_path = "/mnt/root", read_only = true },
-    { host_path = "${var.raid_root}", container_path = "/mnt/raid1", read_only = true },
+    { host_path = var.raid_root, container_path = "/mnt/raid1", read_only = true },
   ]
 
   networks = [
