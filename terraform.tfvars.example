@@ -1,5 +1,6 @@
 zone_id       = "zone_id"
 tunnel_id     = "tunnel_id"
+cloudflare_account_id = "Cloudflare_Account_ID"
 ssh_subdomain = "ssh-subdomain"
 domain        = "domain"
 omv_ip = "ip"
@@ -25,3 +26,6 @@ immich_db_password = "db_password"
 
 dockerhub_username = "username"
 dockerhub_token = "token"
+
+couchdb_user     = "user"
+couchdb_password = "password"

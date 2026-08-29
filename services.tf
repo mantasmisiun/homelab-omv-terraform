@@ -632,3 +632,32 @@ module "traefik" {
     "traefik.ping.manualRouting"                                       = "true"
   }
 }
+
+module "couchdb_obsidian" {
+  source  = "./modules/docker-service"
+  name    = "couchdb-obsidian"
+  image   = "couchdb@sha256:9ea24cbd76522fe845d1c32c7fd1dcfc8a3ba73dcc4817d62f8a7f7f1dfaffe3"
+  restart = "always"
+
+  networks = [{ name = "proxy" }]
+
+  bind_mounts = [
+    { host_path = "${var.raid_root}/docker/couchdb/couchdb-data", container_path = "/opt/couchdb/data" },
+    { host_path = "${var.raid_root}/docker/couchdb/couchdb-etc", container_path = "/opt/couchdb/etc/local.d" },
+  ]
+
+  env = [
+    "COUCHDB_USER=${var.couchdb_user}",
+    "COUCHDB_PASSWORD=${var.couchdb_password}",
+  ]
+
+  labels = {
+    "traefik.enable"                                         = "true"
+    "traefik.docker.network"                                 = "proxy"
+    "traefik.http.routers.couchdb.entrypoints"               = "https"
+    "traefik.http.routers.couchdb.rule"                      = "Host(`obsidian.${var.domain}`)"
+    "traefik.http.routers.couchdb.tls"                       = "true"
+    "traefik.http.services.couchdb.loadbalancer.server.port" = "5984"
+
+  }
+}
