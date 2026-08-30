@@ -28,7 +28,7 @@ locals {
     souply       = "souply staging website"
     souply-minio = "souply dev minio storage"
     obsidian     = "obsidian notes sync"
-    nextcloud    = "Office 365 alternative"
+    papra        = "Document ingestion and tagging service"
   }
 }
 
@@ -138,19 +138,12 @@ variable "cloudflare_account_id" {
   description = "Accoutn ID for cloudflare account for tunnel"
 }
 
-variable "nextcloud_db_password" {
-  type        = string
-  description = "Password for nextcloud postgres DB"
-  sensitive   = true
+variable "owlrelay_api_key" {
+  type      = string
+  sensitive = true
 }
 
-variable "nextcloud_admin_user" {
-  type        = string
-  description = "Admin name for nextcloud account"
-}
-
-variable "nextcloud_admin_password" {
-  type        = string
-  description = "Password for nextcloud admin account"
-  sensitive   = true
+variable "email_webhook_secret" {
+  type      = string
+  sensitive = true
 }

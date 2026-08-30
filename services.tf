@@ -76,12 +76,17 @@ module "papra" {
 
   env = [
     "AUTH_SECRET=${var.papra_auth_secret}",
-    "APP_BASE_URL=http://${var.omv_ip}:1221",
+    "APP_BASE_URL=https://papra.${var.domain}",
     "TRUSTED_ORIGINS=http://${var.omv_ip}:1221,https://papra.${var.domain}",
-    "AUTH_IS_REGISTRATION_ENABLED=true",
+    "AUTH_IS_REGISTRATION_ENABLED=false",
     "AUTH_IP_ADDRESS_HEADERS=x-forwarded-for",
     "DOCUMENTS_OCR_LANGUAGES=lit,eng",
     "DOCUMENT_STORAGE_MAX_UPLOAD_SIZE=104857600",
+    "INTAKE_EMAILS_IS_ENABLED=true",
+    "INTAKE_EMAILS_DRIVER=owlrelay",
+    "OWLRELAY_API_KEY=${var.owlrelay_api_key}",
+    "INTAKE_EMAILS_WEBHOOK_SECRET=${var.email_webhook_secret}",
+    "OWLRELAY_WEBHOOK_URL=https://papra.${var.domain}/api/intake-emails/ingest",
   ]
 
   labels = {
@@ -660,134 +665,4 @@ module "couchdb_obsidian" {
     "traefik.http.services.couchdb.loadbalancer.server.port" = "5984"
 
   }
-}
-
-module "nextcloud_postgres" {
-  source = "./modules/docker-service"
-
-  name    = "nextcloud-postgres"
-  image   = "postgres@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685"
-  restart = "always"
-
-  networks = [
-    { name = docker_network.nextcloud.name, aliases = ["database"] },
-  ]
-
-  bind_mounts = [
-    { host_path = "${var.ssd_root}/nextcloud/db", container_path = "/var/lib/postgresql/data" }
-  ]
-
-  env = [
-    "POSTGRES_DB=nextcloud",
-    "POSTGRES_USER=nextcloud",
-    "POSTGRES_PASSWORD=${var.nextcloud_db_password}",
-    "POSTGRES_INITDB_ARGS=--data-checksums",
-  ]
-}
-
-module "nextcloud_redis" {
-  source = "./modules/docker-service"
-
-  name    = "nextcloud-redis"
-  image   = "docker.io/valkey/valkey@sha256:81db6d39e1bba3b3ff32bd3a1b19a6d69690f94a3954ec131277b9a26b95b3aa"
-  restart = "always"
-
-  networks = [
-    { name = docker_network.nextcloud.name, aliases = ["redis"] },
-  ]
-
-  data_path = "/data"
-}
-
-module "nextcloud_app" {
-  source = "./modules/docker-service"
-
-  name    = "nextcloud-app"
-  image   = "nextcloud@sha256:07ec73cc816e58d6f45a162cd53ef886462c29271a23fc68d0124cec276e3767"
-  restart = "always"
-
-  depends_on = [
-    module.nextcloud_postgres,
-    module.nextcloud_redis
-  ]
-
-  networks = [
-    { name = docker_network.nextcloud.name, aliases = ["nextcloud-app"] },
-    { name = "proxy" }
-  ]
-
-  bind_mounts = [
-    { host_path = "${var.raid_root}/docker/nextcloud/html", container_path = "/var/www/html" },
-    { host_path = "${var.raid_root}/data/nextcloud", container_path = "/data" },
-  ]
-
-  env = [
-    "POSTGRES_HOST=database",
-    "POSTGRES_DB=nextcloud",
-    "POSTGRES_USER=nextcloud",
-    "POSTGRES_PASSWORD=${var.nextcloud_db_password}",
-    "REDIS_HOST=redis",
-    "NEXTCLOUD_ADMIN_USER=${var.nextcloud_admin_user}",
-    "NEXTCLOUD_ADMIN_PASSWORD=${var.nextcloud_admin_password}",
-    "NEXTCLOUD_TRUSTED_DOMAINS=nextcloud.${var.domain}",
-    "NEXTCLOUD_DATA_DIR=/data",
-    "OVERWRITEPROTOCOL=https",
-    "OVERWRITEHOST=nextcloud.${var.domain}",
-    "TRUSTED_PROXIES=192.168.32.0/20",
-    "PHP_MEMORY_LIMIT=1G",
-    "PHP_UPLOAD_LIMIT=10G",
-    "TZ=${var.timezone}",
-  ]
-
-  labels = {
-    "traefik.enable"                                                   = "true"
-    "traefik.docker.network"                                           = "proxy"
-    "traefik.http.routers.nextcloud.entrypoints"                       = "https"
-    "traefik.http.routers.nextcloud.rule"                              = "Host(`nextcloud.${var.domain}`)"
-    "traefik.http.routers.nextcloud.tls.certresolver"                  = "cloudflare"
-    "traefik.http.services.nextcloud.loadbalancer.server.port"         = "80"
-    "traefik.http.routers.nextcloud.middlewares"                       = "https-redirectscheme@file,nextcloud-dav,hsts@file"
-    "traefik.http.middlewares.nextcloud-dav.redirectregex.regex"       = "https://(.*)/.well-known/(card|cal)dav"
-    "traefik.http.middlewares.nextcloud-dav.redirectregex.replacement" = "https://$${1}/remote.php/dav/"
-    "traefik.http.middlewares.nextcloud-dav.redirectregex.permanent"   = "true"
-  }
-}
-
-module "nextcloud_cron" {
-  source = "./modules/docker-service"
-
-  name    = "nextcloud-cron"
-  image   = "nextcloud@sha256:07ec73cc816e58d6f45a162cd53ef886462c29271a23fc68d0124cec276e3767"
-  restart = "always"
-
-  entrypoint = ["/cron.sh"]
-
-  depends_on = [module.nextcloud_app]
-
-  networks = [
-    { name = docker_network.nextcloud.name, aliases = ["nextcloud-cron"] },
-  ]
-
-  bind_mounts = [
-    { host_path = "${var.raid_root}/docker/nextcloud/html", container_path = "/var/www/html" },
-    { host_path = "${var.raid_root}/data/nextcloud", container_path = "/data" },
-  ]
-
-  env = [
-    "POSTGRES_HOST=database",
-    "POSTGRES_DB=nextcloud",
-    "POSTGRES_USER=nextcloud",
-    "POSTGRES_PASSWORD=${var.nextcloud_db_password}",
-    "REDIS_HOST=redis",
-    "NEXTCLOUD_ADMIN_USER=${var.nextcloud_admin_user}",
-    "NEXTCLOUD_ADMIN_PASSWORD=${var.nextcloud_admin_password}",
-    "NEXTCLOUD_TRUSTED_DOMAINS=nextcloud.${var.domain}",
-    "NEXTCLOUD_DATA_DIR=/data",
-    "OVERWRITEPROTOCOL=https",
-    "OVERWRITEHOST=nextcloud.${var.domain}",
-    "TRUSTED_PROXIES=192.168.32.0/20",
-    "PHP_UPLOAD_LIMIT=10G",
-    "PHP_MEMORY_LIMIT=1G",
-    "TZ=${var.timezone}",
-  ]
 }
