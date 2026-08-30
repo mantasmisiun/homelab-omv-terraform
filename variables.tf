@@ -137,3 +137,20 @@ variable "cloudflare_account_id" {
   type        = string
   description = "Accoutn ID for cloudflare account for tunnel"
 }
+
+variable "nextcloud_db_password" {
+  type        = string
+  description = "Password for nextcloud postgres DB"
+  sensitive   = true
+}
+
+variable "nextcloud_admin_user" {
+  type        = string
+  description = "Admin name for nextcloud account"
+}
+
+variable "nextcloud_admin_password" {
+  type        = string
+  description = "Password for nextcloud admin account"
+  sensitive   = true
+}

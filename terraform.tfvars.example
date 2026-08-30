@@ -29,3 +29,7 @@ dockerhub_token = "token"
 
 couchdb_user     = "user"
 couchdb_password = "password"
+
+nextcloud_db_password    = "DB_PASSWORD"
+nextcloud_admin_user     = "ADMIN_USERNAME"
+nextcloud_admin_password = "ADMIN_PASSWORD"

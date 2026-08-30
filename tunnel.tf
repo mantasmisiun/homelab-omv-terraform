@@ -201,6 +201,28 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "main" {
         service = "https://192.168.1.212:443"
       },
       {
+        hostname = "nextcloud.manofoto.dpdns.org"
+        origin_request = {
+          access                   = null
+          ca_pool                  = null
+          connect_timeout          = null
+          disable_chunked_encoding = null
+          http2_origin             = null
+          http_host_header         = null
+          keep_alive_connections   = null
+          keep_alive_timeout       = null
+          match_sn_ito_host        = null
+          no_happy_eyeballs        = null
+          no_tls_verify            = null
+          origin_server_name       = "nextcloud.manofoto.dpdns.org"
+          proxy_type               = null
+          tcp_keep_alive           = null
+          tls_timeout              = null
+        }
+        path    = null
+        service = "https://192.168.1.212:443"
+      },
+      {
         hostname       = null
         origin_request = null
         path           = null
