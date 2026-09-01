@@ -109,18 +109,6 @@ variable "traefik_dashboard_credentials" {
   sensitive   = true
 }
 
-variable "dockerhub_username" {
-  type        = string
-  description = "Account username on docker hub"
-  sensitive   = true
-}
-
-variable "dockerhub_token" {
-  type        = string
-  description = "Personal access token created on docker hub for reading public repositories"
-  sensitive   = true
-}
-
 variable "couchdb_user" {
   type        = string
   description = "CouchDB username"
@@ -130,6 +118,18 @@ variable "couchdb_user" {
 variable "couchdb_password" {
   type        = string
   description = "Password for couchdb"
+  sensitive   = true
+}
+
+variable "dockerhub_username" {
+  type        = string
+  description = "Account username on docker hub"
+  sensitive   = true
+}
+
+variable "dockerhub_token" {
+  type        = string
+  description = "Personal access token created on docker hub for reading public repositories"
   sensitive   = true
 }
 

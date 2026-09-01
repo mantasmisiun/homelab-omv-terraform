@@ -2,7 +2,7 @@ module "glance_agent" {
   source = "./modules/docker-service"
 
   name  = "glance-agent-tf"
-  image = "glanceapp/agent@sha256:f57ee10cd2f23e66ae6a8325fb6106e12878e1f985a88aaa914687d14489017c"
+  image = "glanceapp/agent:v0.1.0@sha256:f57ee10cd2f23e66ae6a8325fb6106e12878e1f985a88aaa914687d14489017c"
 
 
   ports = [
@@ -23,7 +23,7 @@ module "flaresolverr" {
   source = "./modules/docker-service"
 
   name        = "flaresolverr-tf"
-  image       = "ghcr.io/flaresolverr/flaresolverr:v3.5.0"
+  image       = "ghcr.io/flaresolverr/flaresolverr:v3.5.0@sha256:139dfee1c6f89249c8d665d1333a42e8ec74ec0a86bc6bb1c8461e10d3a66a47"
   volume_name = "flaresolverr-config"
 
   ports = [
@@ -43,7 +43,7 @@ module "pi_stats" {
   source = "./modules/docker-service"
 
   name    = "pi-stats-tf"
-  image   = "nginx@sha256:db35bfc6b2951e7f8a72db5db120288c127ffaeeb4a6d4b95a26fead017d5913" # 1.31.4-alpine
+  image   = "nginx:1.31.4-alpine@sha256:db35bfc6b2951e7f8a72db5db120288c127ffaeeb4a6d4b95a26fead017d5913" # 1.31.4-alpine
   restart = "unless-stopped"
 
   networks = [
@@ -58,8 +58,9 @@ module "pi_stats" {
 module "papra" {
   source = "./modules/docker-service"
 
-  name    = "papra"
-  image   = "ghcr.io/papra-hq/papra@sha256:a7a42e228f73f229d1e2dcd53de7b67503f1756d1aa3a894ab175dba8030c0e8"
+  name  = "papra"
+  image = "ghcr.io/papra-hq/papra:26.6.2-rootless@sha256:a281cb44176dbe5323e0f7ea2d6fd34d58914a3a8525c36437a086d1d7c4fef8"
+
   restart = "unless-stopped"
   bind_mounts = [
     { host_path = "${var.raid_root}/docker/papra/app-data", container_path = "/app/app-data" },
@@ -104,7 +105,7 @@ module "ollama" {
   source = "./modules/docker-service"
 
   name    = "ollama"
-  image   = "ollama/ollama@sha256:08ddf4b4dbfdc4fc1f5b0fe535915998581085402e307b57bb308db68460e372"
+  image   = "ollama/ollama:0.33.2@sha256:020e4134285e2ef4d8fd801234176de3b4faadc992a3eb06c8e66a2f9d4c4ba2"
   restart = "always"
 
   networks = [
@@ -130,7 +131,7 @@ module "homeassistant" {
   source = "./modules/docker-service"
 
   name    = "homeassistant"
-  image   = "ghcr.io/home-assistant/home-assistant@sha256:14931c6b13756317849f46da1d01b45937a1150db66c081cfe529d48215943fe" # 2026.8.3
+  image   = "ghcr.io/home-assistant/home-assistant:2026.8.3@sha256:14931c6b13756317849f46da1d01b45937a1150db66c081cfe529d48215943fe" # 2026.8.3
   restart = "always"
 
   network_mode = "host"
@@ -154,7 +155,7 @@ module "prowlarr" {
   source = "./modules/docker-service"
 
   name    = "prowlarr"
-  image   = "lscr.io/linuxserver/prowlarr@sha256:ab91301778251f82a31bbfc87f0497376d59e84439d9a1ceff6a61d594d1e3d7"
+  image   = "lscr.io/linuxserver/prowlarr:2.5.2.5491-ls157@sha256:ab91301778251f82a31bbfc87f0497376d59e84439d9a1ceff6a61d594d1e3d7"
   restart = "always"
 
   networks = [
@@ -189,7 +190,7 @@ module "sonarr" {
   source = "./modules/docker-service"
 
   name    = "sonarr"
-  image   = "lscr.io/linuxserver/sonarr@sha256:c19aa4ecdf03d73e1d5c901da33744cb7eb4d921f89bafed1ca264601d7fa224"
+  image   = "lscr.io/linuxserver/sonarr:4.0.19.2979-ls322@sha256:c19aa4ecdf03d73e1d5c901da33744cb7eb4d921f89bafed1ca264601d7fa224"
   restart = "always"
 
   networks = [
@@ -226,7 +227,7 @@ module "radarr" {
   source = "./modules/docker-service"
 
   name    = "radarr"
-  image   = "lscr.io/linuxserver/radarr@sha256:119aaa4a4f7349bcd2a136c5373a0d7925b5479915c7dfe0c0ad352db2a6d438"
+  image   = "lscr.io/linuxserver/radarr:6.3.0.10514-ls314@sha256:119aaa4a4f7349bcd2a136c5373a0d7925b5479915c7dfe0c0ad352db2a6d438"
   restart = "always"
 
   networks = [
@@ -262,7 +263,7 @@ module "qbittorrent" {
   source = "./modules/docker-service"
 
   name    = "qbittorrent"
-  image   = "lscr.io/linuxserver/qbittorrent@sha256:304b19cf94bf4fda534e0b086cab9c5f1a9e139a8180c05c0ad7d2ba1526fa99" # 5.2.3_v2.0.14
+  image   = "lscr.io/linuxserver/qbittorrent:5.2.3_v2.0.14-ls473@sha256:304b19cf94bf4fda534e0b086cab9c5f1a9e139a8180c05c0ad7d2ba1526fa99"
   restart = "always"
 
   networks = [
@@ -301,7 +302,7 @@ module "jellyfin" {
   source = "./modules/docker-service"
 
   name    = "jellyfin"
-  image   = "lscr.io/linuxserver/jellyfin@sha256:4f6d8dfc53ec5a1ddf7a90e4338972d57d7b0adff6dc88b53184f8285d0b594f"
+  image   = "lscr.io/linuxserver/jellyfin:10.11.11ubu2604-ls46@sha256:4f6d8dfc53ec5a1ddf7a90e4338972d57d7b0adff6dc88b53184f8285d0b594f"
   restart = "always"
 
   networks = [
@@ -338,7 +339,7 @@ module "jellyfin" {
 module "glance" {
   source  = "./modules/docker-service"
   name    = "glance"
-  image   = "glanceapp/glance@sha256:32ab73d80f2b8b5fb0735b0431deb36b93fbb6b2fb43592449b0178c8b83e350"
+  image   = "glanceapp/glance:v0.8.5@sha256:32ab73d80f2b8b5fb0735b0431deb36b93fbb6b2fb43592449b0178c8b83e350"
   restart = "unless-stopped"
 
   ports = [
@@ -374,7 +375,7 @@ module "adguard" {
   source = "./modules/docker-service"
 
   name    = "adguard"
-  image   = "adguard/adguardhome@sha256:aba9e3bf0613be3ba3755e1fc311b126e2c24bec25e18b6483894a88283074f0" # v0.107.79
+  image   = "adguard/adguardhome:v0.107.79@sha256:aba9e3bf0613be3ba3755e1fc311b126e2c24bec25e18b6483894a88283074f0" # v0.107.79
   restart = "always"
 
   ports = [
@@ -416,7 +417,7 @@ module "mailpit_souply_staging" {
   source = "./modules/docker-service"
 
   name    = "mailpit-staging"
-  image   = "axllent/mailpit@sha256:c96991d9bef73594c246d89ca81411d4e916f03e76a7d2d72fa2ab5dd3c9ce24"
+  image   = "axllent/mailpit:v1.31.0@sha256:c96991d9bef73594c246d89ca81411d4e916f03e76a7d2d72fa2ab5dd3c9ce24"
   restart = "unless-stopped"
 
   networks = [
@@ -432,7 +433,7 @@ module "vaultwarden" {
   source = "./modules/docker-service"
 
   name  = "vaultwarden"
-  image = "vaultwarden/server@sha256:094b5689ed81549bd293418395c7cf495ae9d960fc2d4928cef2083ef913d912" # 1.37.2
+  image = "vaultwarden/server:1.37.2@sha256:094b5689ed81549bd293418395c7cf495ae9d960fc2d4928cef2083ef913d912" # 1.37.2
 
   restart = "always"
 
@@ -478,7 +479,7 @@ module "immich_postgres" {
   source = "./modules/docker-service"
 
   name    = "immich_postgres"
-  image   = "ghcr.io/immich-app/postgres@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23"
+  image   = "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23"
   restart = "always"
 
   networks = [
@@ -504,7 +505,7 @@ module "immich_redis" {
   source = "./modules/docker-service"
 
   name    = "immich_redis"
-  image   = "docker.io/valkey/valkey@sha256:81db6d39e1bba3b3ff32bd3a1b19a6d69690f94a3954ec131277b9a26b95b3aa"
+  image   = "docker.io/valkey/valkey:9.1.2@sha256:a91d34ab33975b1054e26f1bd9995b268f7e0c507b5ded7f3d181a1a25521630"
   restart = "always"
 
   networks = [
@@ -518,7 +519,7 @@ module "immich_machine_learning" {
   source = "./modules/docker-service"
 
   name    = "immich_machine_learning"
-  image   = "ghcr.io/immich-app/immich-machine-learning@sha256:82d3f6a093455964508052e0b3bc55a91075b48b65be35e78b40774a72c1ebb3"
+  image   = "ghcr.io/immich-app/immich-machine-learning:v3.1.0@sha256:5a0839dc5303cd7215bcd2180a26aed3af41675aefb3e75e5157e9f10ad16e6e"
   restart = "always"
 
   networks = [
@@ -542,7 +543,7 @@ module "immich_server" {
   source = "./modules/docker-service"
 
   name       = "immich_server"
-  image      = "ghcr.io/immich-app/immich-server@sha256:b434cb9287eea1471c9974845914d4dd328c9c2d652e446ed4930f99944f0ceb"
+  image      = "ghcr.io/immich-app/immich-server:v3.1.0@sha256:b434cb9287eea1471c9974845914d4dd328c9c2d652e446ed4930f99944f0ceb"
   restart    = "always"
   depends_on = [module.immich_postgres, module.immich_redis]
 
@@ -591,7 +592,7 @@ module "traefik" {
   source = "./modules/docker-service"
 
   name    = "traefik"
-  image   = "traefik@sha256:5203c3f39ca70de6790d964624e042463ffbd57715bc82be155cf224c0dd5144" # v3.7.11
+  image   = "traefik:v3.7.12@sha256:9c2a54d87f76f5c2f5f2682c68394af92fb12c0a2686798d6462a3f84bd78eaf"
   restart = "always"
 
   networks = [
@@ -639,9 +640,10 @@ module "traefik" {
 }
 
 module "couchdb_obsidian" {
-  source  = "./modules/docker-service"
+  source = "./modules/docker-service"
+
   name    = "couchdb-obsidian"
-  image   = "couchdb@sha256:9ea24cbd76522fe845d1c32c7fd1dcfc8a3ba73dcc4817d62f8a7f7f1dfaffe3"
+  image   = "couchdb:3.5.2.1@sha256:9ea24cbd76522fe845d1c32c7fd1dcfc8a3ba73dcc4817d62f8a7f7f1dfaffe3"
   restart = "always"
 
   networks = [{ name = "proxy" }]
