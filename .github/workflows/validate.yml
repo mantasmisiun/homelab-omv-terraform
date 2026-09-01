@@ -21,3 +21,17 @@ jobs:
       - run: terraform init -backend=false
 
       - run: terraform validate
+
+  tflint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.64.0
+
+      - run: tflint --init
+
+      - run: tflint --recursive --format compact
+
