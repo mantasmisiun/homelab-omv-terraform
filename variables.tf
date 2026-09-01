@@ -107,6 +107,18 @@ variable "traefik_dashboard_credentials" {
   sensitive   = true
 }
 
+variable "couchdb_user" {
+  type        = string
+  description = "CouchDB username"
+  sensitive   = true
+}
+
+variable "couchdb_password" {
+  type        = string
+  description = "Password for couchdb"
+  sensitive   = true
+}
+
 variable "dockerhub_username" {
   type        = string
   description = "Account username on docker hub"
