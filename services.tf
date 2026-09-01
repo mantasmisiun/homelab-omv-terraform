@@ -77,12 +77,17 @@ module "papra" {
 
   env = [
     "AUTH_SECRET=${var.papra_auth_secret}",
-    "APP_BASE_URL=http://${var.omv_ip}:1221",
+    "APP_BASE_URL=https://papra.${var.domain}",
     "TRUSTED_ORIGINS=http://${var.omv_ip}:1221,https://papra.${var.domain}",
-    "AUTH_IS_REGISTRATION_ENABLED=true",
+    "AUTH_IS_REGISTRATION_ENABLED=false",
     "AUTH_IP_ADDRESS_HEADERS=x-forwarded-for",
     "DOCUMENTS_OCR_LANGUAGES=lit,eng",
     "DOCUMENT_STORAGE_MAX_UPLOAD_SIZE=104857600",
+    "INTAKE_EMAILS_IS_ENABLED=true",
+    "INTAKE_EMAILS_DRIVER=owlrelay",
+    "OWLRELAY_API_KEY=${var.owlrelay_api_key}",
+    "INTAKE_EMAILS_WEBHOOK_SECRET=${var.email_webhook_secret}",
+    "OWLRELAY_WEBHOOK_URL=https://papra.${var.domain}/api/intake-emails/ingest",
   ]
 
   labels = {
@@ -636,6 +641,7 @@ module "traefik" {
 
 module "couchdb_obsidian" {
   source  = "./modules/docker-service"
+  
   name    = "couchdb-obsidian"
   image   = "couchdb:3.5.2.1@sha256:9ea24cbd76522fe845d1c32c7fd1dcfc8a3ba73dcc4817d62f8a7f7f1dfaffe3"
   restart = "always"

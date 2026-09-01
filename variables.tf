@@ -27,6 +27,8 @@ locals {
     souply-api   = "souply staging server subdomain"
     souply       = "souply staging website"
     souply-minio = "souply dev minio storage"
+    obsidian     = "obsidian notes sync"
+    papra        = "Document ingestion and tagging service"
   }
 }
 
@@ -129,4 +131,31 @@ variable "dockerhub_token" {
   type        = string
   description = "Personal access token created on docker hub for reading public repositories"
   sensitive   = true
+}
+
+variable "couchdb_user" {
+  type        = string
+  description = "CouchDB username"
+  sensitive   = true
+}
+
+variable "couchdb_password" {
+  type        = string
+  description = "Password for couchdb"
+  sensitive   = true
+}
+
+variable "cloudflare_account_id" {
+  type        = string
+  description = "Accoutn ID for cloudflare account for tunnel"
+}
+
+variable "owlrelay_api_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "email_webhook_secret" {
+  type      = string
+  sensitive = true
 }

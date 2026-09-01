@@ -69,6 +69,11 @@ variable "user" {
   default = null
 }
 
+variable "entrypoint" {
+  type    = list(string)
+  default = null
+}
+
 variable "device_requests" {
   type = list(object({
     driver       = optional(string)
