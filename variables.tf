@@ -133,18 +133,6 @@ variable "dockerhub_token" {
   sensitive   = true
 }
 
-variable "couchdb_user" {
-  type        = string
-  description = "CouchDB username"
-  sensitive   = true
-}
-
-variable "couchdb_password" {
-  type        = string
-  description = "Password for couchdb"
-  sensitive   = true
-}
-
 variable "cloudflare_account_id" {
   type        = string
   description = "Accoutn ID for cloudflare account for tunnel"
