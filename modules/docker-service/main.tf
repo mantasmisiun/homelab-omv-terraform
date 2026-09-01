@@ -56,7 +56,8 @@ resource "docker_container" "this" {
       capabilities = device_requests.value.capabilities
     }
   }
-  env = var.env
+  entrypoint = var.entrypoint
+  env        = var.env
 
   shm_size = var.shm_size
 
