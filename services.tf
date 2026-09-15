@@ -23,7 +23,7 @@ module "flaresolverr" {
   source = "./modules/docker-service"
 
   name        = "flaresolverr-tf"
-  image       = "ghcr.io/flaresolverr/flaresolverr:v3.5.0@sha256:139dfee1c6f89249c8d665d1333a42e8ec74ec0a86bc6bb1c8461e10d3a66a47"
+  image       = "ghcr.io/flaresolverr/flaresolverr:v3.5.2@sha256:4ad0ed7de64622f9823594bf7bc237149158fca881f875aafbdd8456f6467134"
   volume_name = "flaresolverr-config"
 
   ports = [
@@ -131,7 +131,7 @@ module "homeassistant" {
   source = "./modules/docker-service"
 
   name    = "homeassistant"
-  image   = "ghcr.io/home-assistant/home-assistant:2026.8.3@sha256:14931c6b13756317849f46da1d01b45937a1150db66c081cfe529d48215943fe" # 2026.8.3
+  image   = "ghcr.io/home-assistant/home-assistant:2026.9.2@sha256:542890f4a7ef9269b7a5ac23ada303b327537c62fa0f866e49daebc61cb44caa"
   restart = "always"
 
   network_mode = "host"
@@ -302,7 +302,7 @@ module "jellyfin" {
   source = "./modules/docker-service"
 
   name    = "jellyfin"
-  image   = "lscr.io/linuxserver/jellyfin:10.11.11ubu2604-ls46@sha256:4f6d8dfc53ec5a1ddf7a90e4338972d57d7b0adff6dc88b53184f8285d0b594f"
+  image   = "lscr.io/linuxserver/jellyfin:12.1ubu2604-ls49@sha256:6212319152eef0a44bf0ec34536df164c5d358e2cc27e7409d2f26138e73ad8e"
   restart = "always"
 
   networks = [
@@ -433,7 +433,7 @@ module "vaultwarden" {
   source = "./modules/docker-service"
 
   name  = "vaultwarden"
-  image = "vaultwarden/server:1.37.2@sha256:094b5689ed81549bd293418395c7cf495ae9d960fc2d4928cef2083ef913d912" # 1.37.2
+  image = "docker.io/vaultwarden/server:1.37.3@sha256:4ecafc9049c7d878c7717d1ce4f9059d706758c78b8fa42e5ead21f4b2dfc770"
 
   restart = "always"
 
@@ -505,7 +505,7 @@ module "immich_redis" {
   source = "./modules/docker-service"
 
   name    = "immich_redis"
-  image   = "docker.io/valkey/valkey:9.1.2@sha256:a91d34ab33975b1054e26f1bd9995b268f7e0c507b5ded7f3d181a1a25521630"
+  image   = "docker.io/valkey/valkey:9@sha256:70739f85ad2ee01a726a965584a0f94895f01b0c60b3cc8b0aeef11eaa6888cf"
   restart = "always"
 
   networks = [
@@ -519,7 +519,7 @@ module "immich_machine_learning" {
   source = "./modules/docker-service"
 
   name    = "immich_machine_learning"
-  image   = "ghcr.io/immich-app/immich-machine-learning:v3.1.0@sha256:5a0839dc5303cd7215bcd2180a26aed3af41675aefb3e75e5157e9f10ad16e6e"
+  image   = "ghcr.io/immich-app/immich-machine-learning:v3.2.1@sha256:49a53dbf5fbea5c785075667056fb010498969b9143005df5434868035bf5654"
   restart = "always"
 
   networks = [
@@ -543,7 +543,7 @@ module "immich_server" {
   source = "./modules/docker-service"
 
   name       = "immich_server"
-  image      = "ghcr.io/immich-app/immich-server:v3.1.0@sha256:b434cb9287eea1471c9974845914d4dd328c9c2d652e446ed4930f99944f0ceb"
+  image      = "ghcr.io/immich-app/immich-server:v3.2.1@sha256:87bb1b208434a8503e1a2465edd84f3cf94bd72c66feb7ca474629015b8dbfd6"
   restart    = "always"
   depends_on = [module.immich_postgres, module.immich_redis]
 
