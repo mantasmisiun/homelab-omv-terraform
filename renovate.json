@@ -1,0 +1,24 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^services\\.tf$/"],
+      "matchStrings": [
+        "image\\s*=\\s*\"(?<depName>[^:\"]+):(?<currentValue>[^@\"]+)@(?<currentDigest>sha256:[a-f0-9]{64})\""
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["ghcr.io/immich-app/postgres", "docker.io/valkey/valkey"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["ghcr.io/immich-app/immich-server", "ghcr.io/immich-app/immich-machine-learning"],
+      "groupName": "immich"
+    }
+  ]
+}
