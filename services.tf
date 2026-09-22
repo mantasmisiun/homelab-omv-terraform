@@ -519,7 +519,7 @@ module "immich_machine_learning" {
   source = "./modules/docker-service"
 
   name    = "immich_machine_learning"
-  image   = "ghcr.io/immich-app/immich-machine-learning:v3.2.1@sha256:49a53dbf5fbea5c785075667056fb010498969b9143005df5434868035bf5654"
+  image   = "ghcr.io/immich-app/immich-machine-learning:v3.2.2@sha256:60dfcf266a9ef3b7376f5678e8c980d4fb61db5fc48c078fe8a326ab1535d60d"
   restart = "always"
 
   networks = [
@@ -543,7 +543,7 @@ module "immich_server" {
   source = "./modules/docker-service"
 
   name       = "immich_server"
-  image      = "ghcr.io/immich-app/immich-server:v3.2.1@sha256:87bb1b208434a8503e1a2465edd84f3cf94bd72c66feb7ca474629015b8dbfd6"
+  image      = "ghcr.io/immich-app/immich-server:v3.2.2@sha256:79cc1623323d5894922686d8743b4780181428f98eecbfb58ce12c41ef02d1ea"
   restart    = "always"
   depends_on = [module.immich_postgres, module.immich_redis]
 
