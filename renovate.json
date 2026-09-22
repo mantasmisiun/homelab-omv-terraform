@@ -28,6 +28,10 @@
       "matchPackageNames": ["ghcr.io/immich-app/immich-server", "ghcr.io/immich-app/immich-machine-learning"],
       "matchUpdateTypes": ["minor"],
       "automerge": false
+    },
+    {
+      "matchDepNames": ["terraform"],
+      "automerge": false
     }
   ]
 }
