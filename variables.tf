@@ -147,3 +147,9 @@ variable "email_webhook_secret" {
   type      = string
   sensitive = true
 }
+
+variable "docker_host" {
+  type        = string
+  description = "Override for the Docker provider host; unset means SSH to omv_ip"
+  default     = null
+}
