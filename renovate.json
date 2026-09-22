@@ -32,6 +32,10 @@
     {
       "matchDepNames": ["terraform"],
       "automerge": false
+    },
+        {
+      "matchPackageNames": ["lscr.io/linuxserver/**"],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?(?:\\.(?<build>\\d+))?(?:_v[\\d.]+)?(?<compatibility>[a-z]+\\d+)?-ls\\d+$"
     }
   ]
 }
