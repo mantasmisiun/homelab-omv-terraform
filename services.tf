@@ -131,7 +131,7 @@ module "homeassistant" {
   source = "./modules/docker-service"
 
   name    = "homeassistant"
-  image   = "ghcr.io/home-assistant/home-assistant:2026.9.2@sha256:542890f4a7ef9269b7a5ac23ada303b327537c62fa0f866e49daebc61cb44caa"
+  image   = "ghcr.io/home-assistant/home-assistant:2026.9.3@sha256:1aeeebfba2a977182dfc60495ebf24460ac8f0710cac34d86e83aaad53ee4892"
   restart = "always"
 
   network_mode = "host"
