@@ -190,7 +190,7 @@ module "sonarr" {
   source = "./modules/docker-service"
 
   name    = "sonarr"
-  image   = "lscr.io/linuxserver/sonarr:4.0.19.2979-ls322@sha256:c19aa4ecdf03d73e1d5c901da33744cb7eb4d921f89bafed1ca264601d7fa224"
+  image   = "lscr.io/linuxserver/sonarr:4.0.20.3014-ls325@sha256:a5c1a5fecbef946927ab90ad68df319ac5fe644057e5fc18cd993f01ac07b2b2"
   restart = "always"
 
   networks = [
