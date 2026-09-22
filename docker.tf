@@ -1,5 +1,5 @@
 provider "docker" {
-  host = "ssh://root@${var.omv_ip}"
+  host = coalesce(var.docker_host, "ssh://root@${var.omv_ip}")
   registry_auth {
     address  = "registry-1.docker.io"
     username = var.dockerhub_username
