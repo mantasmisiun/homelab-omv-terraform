@@ -902,7 +902,7 @@ module "paperless_gpt" {
   ]
 
   ports = [
-    { external = 3002, internal = 8080 },
+    { external = 3012, internal = 8080 },
   ]
 
   bind_mounts = [
