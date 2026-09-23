@@ -873,7 +873,7 @@ module "paperless_ai" {
     "RAG_SERVICE_URL=http://localhost:8000",
     "RAG_SERVICE_ENABLED=true",
     "SCAN_INTERVAL=*/30 * * * *",
-    "PAPERLESS_URL=http://paperless:8000",
+    "PAPERLESS_URL=http://paperless.${var.domain}",
   ]
 
   labels = {
