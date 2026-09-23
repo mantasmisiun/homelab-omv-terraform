@@ -123,10 +123,9 @@ module "ollama" {
     "OLLAMA_GPU_OVERHEAD=0",
     "OLLAMA_FLASH_ATTENTION=1",
     "OLLAMA_KV_CACHE_TYPE=q8_0",
-
   ]
   device_requests = [
-    { driver = "nvidia", device_ids = ["GPU-9a425c82-9352-6223-6816-8ad979aaa531"], capabilities = ["gpu"] },
+    { driver = "nvidia", count = -1, capabilities = ["gpu"] },
   ]
 }
 
