@@ -684,13 +684,13 @@ module "couchdb_obsidian" {
 module "paperless" {
   source  = "./modules/docker-service"
   name    = "paperless_ngx"
-  image   = "ghcr.io/paperless-ngx/paperless-ngx:v3.2.1@sha256:7391e75706d9dafe84dd2235df12c932c0034a4f453725437d07918eee7a35b8"
+  image = "ghcr.io/paperless-ngx/paperless-ngx:3.2.1@sha256:5fa76604a81df6945086e0837b14b56543d137e8ce4f311cc5d9ebe907e74e79"
   restart = "always"
 
   depends_on = [module.paperless_postgres, module.paperless_redis, module.paperless_gotenberg, module.paperless_tika]
 
   ports = [
-    { external = 8000, internal = 8000 },
+    { external = 8010, internal = 8000 },
   ]
 
   networks = [
@@ -910,7 +910,7 @@ module "paperless_gpt" {
     "LLM_LANGUAGE=Lithuanian",
     "OCR_PROVIDER=llm",
     "VISION_LLM_PROVIDER=ollama",
-    "VISION_LLM_MODEL=mqwen3.5:4b",
+    "VISION_LLM_MODEL=qwen3.5:4b",
     "AUTO_OCR_TAG=paperless-gpt-ocr-auto",
     "AUTO_TAG=paperless-gpt-auto",
     "MANUAL_TAG=paperless-gpt-manual",
