@@ -189,3 +189,10 @@ variable "paperless_secret_key" {
   description = "Django secret key for Paperless sessions; any long random string"
   sensitive   = true
 }
+
+variable "desktop_ollama_url" {
+  type        = string
+  description = "Ollama on the desktop, reached over NetBird"
+  default     = "http://100.77.251.0:11434"
+}
+
