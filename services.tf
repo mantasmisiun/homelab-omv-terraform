@@ -850,7 +850,6 @@ module "paperless_ai" {
 
   networks = [
     { name = docker_network.paperless.name },
-    { name = docker_network.internal.name },
     { name = "proxy" },
   ]
 
@@ -868,7 +867,7 @@ module "paperless_ai" {
     "PAPERLESS_API_TOKEN=${var.paperless_api_token}",
     "PAPERLESS_USERNAME=${var.paperless_admin_user}",
     "AI_PROVIDER=ollama",
-    "OLLAMA_API_URL=http://ollama:11434",
+    "OLLAMA_API_URL=${var.desktop_ollama_url}",
     "OLLAMA_MODEL=gemma3:12b",
     "RAG_SERVICE_URL=http://localhost:8000",
     "RAG_SERVICE_ENABLED=true",
@@ -897,7 +896,6 @@ module "paperless_gpt" {
 
   networks = [
     { name = docker_network.paperless.name },
-    { name = docker_network.internal.name },
     { name = "proxy" },
   ]
 
@@ -914,7 +912,7 @@ module "paperless_gpt" {
     "PAPERLESS_API_TOKEN=${var.paperless_api_token}",
     "LLM_PROVIDER=ollama",
     "LLM_MODEL=gemma3:12b",
-    "OLLAMA_HOST=http://ollama:11434",
+    "OLLAMA_HOST=${var.desktop_ollama_url}",
     "OLLAMA_CONTEXT_LENGTH=8192",
     "TOKEN_LIMIT=1000",
     "LLM_LANGUAGE=Lithuanian",
