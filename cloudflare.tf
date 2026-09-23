@@ -23,3 +23,13 @@ resource "cloudflare_dns_record" "ssh_siauliai" {
     prevent_destroy = true
   }
 }
+
+resource "cloudflare_dns_record" "netbird" {
+  zone_id = var.zone_id
+  name    = "netbird"
+  type    = "A"
+  content = "92.5.186.226"
+  proxied = false
+  ttl     = 300
+  comment = "NetBird control plane on the Oracle VM"
+}
