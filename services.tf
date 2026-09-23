@@ -910,7 +910,7 @@ module "paperless_gpt" {
     "LLM_LANGUAGE=Lithuanian",
     "OCR_PROVIDER=llm",
     "VISION_LLM_PROVIDER=ollama",
-    "VISION_LLM_MODEL=mqwen3.5:4b",
+    "VISION_LLM_MODEL=qwen3.5:4b",
     "AUTO_OCR_TAG=paperless-gpt-ocr-auto",
     "AUTO_TAG=paperless-gpt-auto",
     "MANUAL_TAG=paperless-gpt-manual",
