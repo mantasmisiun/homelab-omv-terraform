@@ -1,9 +1,6 @@
 resource "docker_image" "this" {
   name         = var.image
   keep_locally = true
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "docker_volume" "data" {
