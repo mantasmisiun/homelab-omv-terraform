@@ -756,7 +756,7 @@ module "paperless_postgres" {
 module "paperless_redis" {
   source  = "./modules/docker-service"
   name    = "paperless_redis"
-  image   = "docker.io/library/redis:8.8.3@sha256:5c625b86e04d109e4df082723ddbe3064187c27272f2c1c1787dc70c02d1b4d2"
+  image   = "docker.io/library/redis:8.10.2@sha256:d5ac52db24d4e70566fe9944f22cf5bdc2bc739b05c0f426335161ea6c23f3b3"
   restart = "always"
 
   networks = [{ name = docker_network.paperless.name, aliases = ["redis"] }]
