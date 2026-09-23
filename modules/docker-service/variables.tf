@@ -78,6 +78,7 @@ variable "device_requests" {
   type = list(object({
     driver       = optional(string)
     count        = optional(number)
+    device_ids   = optional(list(string))
     capabilities = optional(list(string))
   }))
   default = []
@@ -104,4 +105,10 @@ variable "networks" {
     aliases = optional(list(string), [])
   }))
   default = []
+}
+
+variable "command" {
+  type        = list(string)
+  description = "Override the image's default command"
+  default     = null
 }

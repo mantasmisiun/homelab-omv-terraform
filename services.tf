@@ -121,9 +121,12 @@ module "ollama" {
   env = [
     "OLLAMA_KEEP_ALIVE=5m",
     "OLLAMA_GPU_OVERHEAD=0",
+    "OLLAMA_FLASH_ATTENTION=1",
+    "OLLAMA_KV_CACHE_TYPE=q8_0",
+
   ]
   device_requests = [
-    { driver = "nvidia", count = -1, capabilities = ["gpu"] }
+    { driver = "nvidia", device_ids = ["GPU-9a425c82-9352-6223-6816-8ad979aaa531"], capabilities = ["gpu"] },
   ]
 }
 
@@ -325,6 +328,11 @@ module "jellyfin" {
     "TZ=${var.timezone}",
   ]
 
+  device_requests = [
+    { driver = "nvidia", device_ids = ["GPU-0e39a53c-6dc4-24c6-24b2-d351604aa6c4"], capabilities = ["gpu", "compute", "video", "utility"] },
+  ]
+
+
   labels = {
     "traefik.enable"                                          = "true",
     "traefik.docker.network"                                  = "proxy",
@@ -519,7 +527,7 @@ module "immich_machine_learning" {
   source = "./modules/docker-service"
 
   name    = "immich_machine_learning"
-  image   = "ghcr.io/immich-app/immich-machine-learning:v3.2.2@sha256:60dfcf266a9ef3b7376f5678e8c980d4fb61db5fc48c078fe8a326ab1535d60d"
+  image   = "ghcr.io/immich-app/immich-machine-learning:v3.2.2-cuda@sha256:38001e84ce46206e9e019d8ee7f567bf55914f019dff8f6a70d02fd93bb14073"
   restart = "always"
 
   networks = [
@@ -527,6 +535,10 @@ module "immich_machine_learning" {
   ]
 
   data_path = "/cache"
+
+  device_requests = [
+    { driver = "nvidia", device_ids = ["GPU-0e39a53c-6dc4-24c6-24b2-d351604aa6c4"], capabilities = ["gpu", "compute", "utility"] },
+  ]
 
   env = [
     "TZ=${var.timezone}",
@@ -563,7 +575,7 @@ module "immich_server" {
   ]
 
   device_requests = [
-    { driver = "nvidia", count = -1, capabilities = ["gpu", "compute", "video"] },
+    { driver = "nvidia", device_ids = ["GPU-0e39a53c-6dc4-24c6-24b2-d351604aa6c4"], capabilities = ["gpu", "compute", "video"] },
   ]
 
   env = [
@@ -667,4 +679,245 @@ module "couchdb_obsidian" {
     "traefik.http.services.couchdb.loadbalancer.server.port" = "5984"
 
   }
+}
+
+module "paperless" {
+  source  = "./modules/docker-service"
+  name    = "paperless_ngx"
+  image   = "ghcr.io/paperless-ngx/paperless-ngx:v3.2.1@sha256:7391e75706d9dafe84dd2235df12c932c0034a4f453725437d07918eee7a35b8"
+  restart = "always"
+
+  depends_on = [module.paperless_postgres, module.paperless_redis, module.paperless_gotenberg, module.paperless_tika]
+
+  ports = [
+    { external = 8000, internal = 8000 },
+  ]
+
+  networks = [
+    { name = docker_network.paperless.name, aliases = ["paperless"] },
+    { name = "proxy" },
+  ]
+
+  bind_mounts = [
+    { host_path = "${var.raid_root}/docker/paperless/data", container_path = "/usr/src/paperless/data" },
+    { host_path = "${var.raid_root}/data/paperless/media", container_path = "/usr/src/paperless/media" },
+    { host_path = "${var.raid_root}/docker/paperless/export", container_path = "/usr/src/paperless/export" },
+    { host_path = "${var.raid_root}/docker/paperless/consume", container_path = "/usr/src/paperless/consume" },
+  ]
+
+  env = [
+    "TZ=${var.timezone}",
+    "USERMAP_UID=1000",
+    "USERMAP_GID=1000",
+    "PAPERLESS_URL=https://paperless.${var.domain}",
+    "PAPERLESS_SECRET_KEY=${var.paperless_secret_key}",
+    "PAPERLESS_REDIS=redis://redis:6379",
+    "PAPERLESS_DBHOST=postgres",
+    "PAPERLESS_DBNAME=${var.paperless_postgres_db}",
+    "PAPERLESS_DBUSER=${var.paperless_postgres_user}",
+    "PAPERLESS_DBPASS=${var.paperless_postgres_password}",
+    "PAPERLESS_TIKA_ENABLED=1",
+    "PAPERLESS_TIKA_GOTENBERG_ENDPOINT=http://gotenberg:3000",
+    "PAPERLESS_TIKA_ENDPOINT=http://tika:9998",
+    "PAPERLESS_OCR_LANGUAGE=lit+eng",
+    "PAPERLESS_OCR_LANGUAGES=lit",
+  ]
+
+  labels = {
+    "traefik.enable"                                           = "true",
+    "traefik.docker.network"                                   = "proxy",
+    "traefik.http.routers.paperless.entrypoints"               = "https",
+    "traefik.http.routers.paperless.rule"                      = "Host(`paperless.${var.domain}`)",
+    "traefik.http.routers.paperless.middlewares"               = "https-redirectscheme@file",
+    "traefik.http.routers.paperless.tls"                       = "true",
+    "traefik.http.services.paperless.loadbalancer.server.port" = "8000",
+  }
+}
+
+module "paperless_postgres" {
+  source  = "./modules/docker-service"
+  name    = "paperless_postgres"
+  image   = "docker.io/library/postgres:18.6@sha256:86c951e05bf56c93d95d397747fb8820ac76cc3bedb78f43abd83eedbe3666ae"
+  restart = "always"
+
+  networks = [{ name = docker_network.paperless.name, aliases = ["postgres"] }]
+
+  bind_mounts = [
+    { host_path = "${var.ssd_root}/paperless/db", container_path = "/var/lib/postgresql" },
+  ]
+  env = [
+    "TZ=${var.timezone}",
+    "POSTGRES_DB=${var.paperless_postgres_db}",
+    "POSTGRES_USER=${var.paperless_postgres_user}",
+    "POSTGRES_PASSWORD=${var.paperless_postgres_password}"
+  ]
+}
+
+module "paperless_redis" {
+  source  = "./modules/docker-service"
+  name    = "paperless_redis"
+  image   = "docker.io/library/redis:8.8.3@sha256:5c625b86e04d109e4df082723ddbe3064187c27272f2c1c1787dc70c02d1b4d2"
+  restart = "always"
+
+  networks = [{ name = docker_network.paperless.name, aliases = ["redis"] }]
+
+  bind_mounts = [
+    { host_path = "${var.ssd_root}/paperless/redis", container_path = "/data" },
+  ]
+
+  env = [
+    "TZ=${var.timezone}"
+  ]
+}
+
+module "paperless_gotenberg" {
+  source = "./modules/docker-service"
+
+  name    = "paperless_gotenberg"
+  image   = "docker.io/gotenberg/gotenberg:8.37.0@sha256:f29984bd1e226bf1b93ba90af06000afa8b315853e99d27b9aaa41b93f15c769"
+  restart = "always"
+
+  networks = [{ name = docker_network.paperless.name, aliases = ["gotenberg"] }]
+
+  command = [
+    "gotenberg",
+    "--chromium-disable-javascript=true",
+    "--chromium-allow-list=file:///tmp/.*",
+  ]
+
+  env = [
+    "TZ=${var.timezone}"
+  ]
+}
+
+module "paperless_tika" {
+  source  = "./modules/docker-service"
+  name    = "paperless_tika"
+  image   = "docker.io/apache/tika:3.3.1.0@sha256:90b7fa1dc018434075fce9e1d9b88b1e3d0ea6979d0cf86e116c79a8073ae973"
+  restart = "always"
+
+  networks = [{ name = docker_network.paperless.name, aliases = ["tika"] }]
+
+  env = [
+    "TZ=${var.timezone}"
+  ]
+}
+
+module "open_webui" {
+  source = "./modules/docker-service"
+
+  name    = "open_webui"
+  image   = "ghcr.io/open-webui/open-webui:v0.11.4@sha256:9591b13f13843c7721c2b8eaf7382846c81b3ffe126526d1888d1fed50c6a33f"
+  restart = "always"
+
+  depends_on = [module.ollama]
+
+  networks = [
+    { name = docker_network.internal.name },
+    { name = "proxy" },
+  ]
+
+  ports = [
+    { external = 3001, internal = 8080 },
+  ]
+
+  bind_mounts = [
+    { host_path = "${var.raid_root}/docker/open-webui/data", container_path = "/app/backend/data" },
+  ]
+
+  env = [
+    "TZ=${var.timezone}",
+    "OLLAMA_BASE_URL=http://ollama:11434"
+  ]
+
+  labels = {
+    "traefik.enable"                                      = "true",
+    "traefik.docker.network"                              = "proxy",
+    "traefik.http.routers.chat.entrypoints"               = "https",
+    "traefik.http.routers.chat.rule"                      = "Host(`chat.${var.domain}`)",
+    "traefik.http.routers.chat.middlewares"               = "https-redirectscheme@file",
+    "traefik.http.routers.chat.tls"                       = "true",
+    "traefik.http.services.chat.loadbalancer.server.port" = "8080",
+  }
+}
+
+module "paperless_ai" {
+  source  = "./modules/docker-service"
+  name    = "paperless_ai"
+  image   = "docker.io/clusterzx/paperless-ai:3.0.9@sha256:2b65888163fd59716f1c8285b31c5bd0b30c9c3c192c42b516688e3887d4ba60"
+  restart = "always"
+
+  depends_on = [module.ollama, module.paperless]
+
+  networks = [
+    { name = docker_network.paperless.name },
+    { name = docker_network.internal.name },
+  ]
+
+  ports = [
+    { external = 3000, internal = 3000 },
+  ]
+
+  bind_mounts = [
+    { host_path = "${var.raid_root}/docker/paperless/ai", container_path = "/app/data" },
+  ]
+
+  env = [
+    "TZ=${var.timezone}",
+    "PAPERLESS_API_URL=http://paperless:8000/api",
+    "PAPERLESS_API_TOKEN=${var.paperless_api_token}",
+    "PAPERLESS_USERNAME=${var.paperless_admin_user}",
+    "AI_PROVIDER=ollama",
+    "OLLAMA_API_URL=http://ollama:11434",
+    "OLLAMA_MODEL=qwen3.5:4b",
+    "RAG_SERVICE_URL=http://localhost:8000",
+    "RAG_SERVICE_ENABLED=true",
+    "SCAN_INTERVAL=*/30 * * * *",
+    "PAPERLESS_URL=http://paperless:8000",
+  ]
+
+}
+
+module "paperless_gpt" {
+  source = "./modules/docker-service"
+
+  name       = "paperless_gpt"
+  image      = "docker.io/icereed/paperless-gpt:v0.28.0@sha256:413af73ff5415e1f61327ccb1c63cb14e84e86b761969be6eaaee61b4f39bef4"
+  restart    = "always"
+  depends_on = [module.ollama, module.paperless]
+
+  networks = [
+    { name = docker_network.paperless.name },
+    { name = docker_network.internal.name },
+  ]
+
+  ports = [
+    { external = 3002, internal = 8080 },
+  ]
+
+  bind_mounts = [
+    { host_path = "${var.raid_root}/docker/paperless/gpt", container_path = "/app/prompts" },
+  ]
+
+  env = [
+    "PAPERLESS_BASE_URL=http://paperless:8000",
+    "PAPERLESS_API_TOKEN=${var.paperless_api_token}",
+    "LLM_PROVIDER=ollama",
+    "LLM_MODEL=qwen3.5:4b",
+    "OLLAMA_HOST=http://ollama:11434",
+    "OLLAMA_CONTEXT_LENGTH=8192",
+    "TOKEN_LIMIT=1000",
+    "LLM_LANGUAGE=Lithuanian",
+    "OCR_PROVIDER=llm",
+    "VISION_LLM_PROVIDER=ollama",
+    "VISION_LLM_MODEL=mqwen3.5:4b",
+    "AUTO_OCR_TAG=paperless-gpt-ocr-auto",
+    "AUTO_TAG=paperless-gpt-auto",
+    "MANUAL_TAG=paperless-gpt-manual",
+    "PDF_OCR_TAGGING=true",
+    "PDF_OCR_COMPLETE_TAG=paperless-gpt-ocr-complete",
+    "PDF_UPLOAD=false",
+    "LOG_LEVEL=INFO",
+  ]
+
 }
