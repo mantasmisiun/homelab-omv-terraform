@@ -125,7 +125,7 @@ module "ollama" {
     "OLLAMA_KV_CACHE_TYPE=q8_0",
   ]
   device_requests = [
-    { driver = "nvidia", count = -1, capabilities = ["gpu"] },
+    { driver = "nvidia", device_ids = ["GPU-0e39a53c-6dc4-24c6-24b2-d351604aa6c4"], capabilities = ["gpu"] },
   ]
 }
 
@@ -536,7 +536,7 @@ module "immich_machine_learning" {
   data_path = "/cache"
 
   device_requests = [
-    { driver = "nvidia", device_ids = ["GPU-0e39a53c-6dc4-24c6-24b2-d351604aa6c4"], capabilities = ["gpu", "compute", "utility"] },
+    { driver = "nvidia", device_ids = ["GPU-9a425c82-9352-6223-6816-8ad979aaa531"], capabilities = ["gpu"] },
   ]
 
   env = [
@@ -574,7 +574,7 @@ module "immich_server" {
   ]
 
   device_requests = [
-    { driver = "nvidia", device_ids = ["GPU-0e39a53c-6dc4-24c6-24b2-d351604aa6c4"], capabilities = ["gpu", "compute", "video"] },
+    { driver = "nvidia", device_ids = ["GPU-9a425c82-9352-6223-6816-8ad979aaa531"], capabilities = ["gpu"] },
   ]
 
   env = [
