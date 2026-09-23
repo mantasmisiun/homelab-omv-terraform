@@ -684,7 +684,7 @@ module "couchdb_obsidian" {
 module "paperless" {
   source  = "./modules/docker-service"
   name    = "paperless_ngx"
-  image   = "ghcr.io/paperless-ngx/paperless-ngx:v3.2.1@sha256:7391e75706d9dafe84dd2235df12c932c0034a4f453725437d07918eee7a35b8"
+  image = "ghcr.io/paperless-ngx/paperless-ngx:3.2.1@sha256:5fa76604a81df6945086e0837b14b56543d137e8ce4f311cc5d9ebe907e74e79"
   restart = "always"
 
   depends_on = [module.paperless_postgres, module.paperless_redis, module.paperless_gotenberg, module.paperless_tika]
