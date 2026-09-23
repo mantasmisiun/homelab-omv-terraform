@@ -54,12 +54,14 @@ resource "docker_container" "this" {
   dynamic "device_requests" {
     for_each = var.device_requests
     content {
+      device_ids   = device_requests.value.device_ids
       driver       = device_requests.value.driver
       count        = device_requests.value.count
       capabilities = device_requests.value.capabilities
     }
   }
   entrypoint = var.entrypoint
+  command    = var.command
   env        = var.env
 
   shm_size = var.shm_size

@@ -16,3 +16,8 @@ resource "docker_network" "immich" {
   name   = "immich"
   driver = "bridge"
 }
+
+resource "docker_network" "paperless" {
+  name   = "paperless"
+  driver = "bridge"
+}

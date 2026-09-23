@@ -153,3 +153,39 @@ variable "docker_host" {
   description = "Override for the Docker provider host; unset means SSH to omv_ip"
   default     = null
 }
+
+variable "paperless_postgres_db" {
+  type        = string
+  description = "Name of the databse in postgres for paperless"
+  default     = "paperless"
+}
+
+variable "paperless_postgres_user" {
+  type        = string
+  description = "User name for the paperless postgres db"
+  default     = "paperless"
+}
+
+variable "paperless_postgres_password" {
+  type        = string
+  description = "Password for the paperless postgres database"
+  sensitive   = true
+}
+
+variable "paperless_api_token" {
+  type        = string
+  description = "Paperless API token used by the AI helpers; created in the Paperless UI after first start"
+  sensitive   = true
+}
+
+variable "paperless_admin_user" {
+  type        = string
+  description = "Paperless username the AI helpers act as"
+  default     = "admin"
+}
+
+variable "paperless_secret_key" {
+  type        = string
+  description = "Django secret key for Paperless sessions; any long random string"
+  sensitive   = true
+}
