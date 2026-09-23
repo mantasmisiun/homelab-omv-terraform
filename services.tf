@@ -230,7 +230,7 @@ module "radarr" {
   source = "./modules/docker-service"
 
   name    = "radarr"
-  image   = "lscr.io/linuxserver/radarr:6.3.0.10514-ls314@sha256:119aaa4a4f7349bcd2a136c5373a0d7925b5479915c7dfe0c0ad352db2a6d438"
+  image   = "lscr.io/linuxserver/radarr:6.4.4.10685-ls318@sha256:adb6c09d6b729ea5e642c99cea35af72702ef476bf4763f153299ac5db9f0b4f"
   restart = "always"
 
   networks = [
