@@ -105,7 +105,7 @@ module "ollama" {
   source = "./modules/docker-service"
 
   name    = "ollama"
-  image   = "ollama/ollama:0.33.2@sha256:020e4134285e2ef4d8fd801234176de3b4faadc992a3eb06c8e66a2f9d4c4ba2"
+  image   = "ollama/ollama:0.34.3@sha256:7ab595e4ead391f6818c7215297781282babe0701f6d9a9f8862ac591360a58b"
   restart = "always"
 
   networks = [
