@@ -926,6 +926,8 @@ module "paperless_gpt" {
     "PDF_OCR_COMPLETE_TAG=paperless-gpt-ocr-complete",
     "PDF_UPLOAD=false",
     "LOG_LEVEL=INFO",
+    "OCR_LIMIT_PAGES=0",
+
   ]
 
   labels = {
