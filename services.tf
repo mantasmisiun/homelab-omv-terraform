@@ -684,7 +684,7 @@ module "couchdb_obsidian" {
 module "paperless" {
   source  = "./modules/docker-service"
   name    = "paperless_ngx"
-  image = "ghcr.io/paperless-ngx/paperless-ngx:3.2.1@sha256:5fa76604a81df6945086e0837b14b56543d137e8ce4f311cc5d9ebe907e74e79"
+  image   = "ghcr.io/paperless-ngx/paperless-ngx:3.2.1@sha256:5fa76604a81df6945086e0837b14b56543d137e8ce4f311cc5d9ebe907e74e79"
   restart = "always"
 
   depends_on = [module.paperless_postgres, module.paperless_redis, module.paperless_gotenberg, module.paperless_tika]
@@ -852,6 +852,7 @@ module "paperless_ai" {
   networks = [
     { name = docker_network.paperless.name },
     { name = docker_network.internal.name },
+    { name = "proxy" },
   ]
 
   ports = [
@@ -876,6 +877,15 @@ module "paperless_ai" {
     "PAPERLESS_URL=http://paperless:8000",
   ]
 
+  labels = {
+    "traefik.enable"                                              = "true",
+    "traefik.docker.network"                                      = "proxy",
+    "traefik.http.routers.paperless-ai.entrypoints"               = "https",
+    "traefik.http.routers.paperless-ai.rule"                      = "Host(`paperless-ai.${var.domain}`)",
+    "traefik.http.routers.paperless-ai.middlewares"               = "https-redirectscheme@file",
+    "traefik.http.routers.paperless-ai.tls"                       = "true",
+    "traefik.http.services.paperless-ai.loadbalancer.server.port" = "3000",
+  }
 }
 
 module "paperless_gpt" {
@@ -889,6 +899,7 @@ module "paperless_gpt" {
   networks = [
     { name = docker_network.paperless.name },
     { name = docker_network.internal.name },
+    { name = "proxy" },
   ]
 
   ports = [
@@ -920,4 +931,13 @@ module "paperless_gpt" {
     "LOG_LEVEL=INFO",
   ]
 
+  labels = {
+    "traefik.enable"                                               = "true",
+    "traefik.docker.network"                                       = "proxy",
+    "traefik.http.routers.paperless-gpt.entrypoints"               = "https",
+    "traefik.http.routers.paperless-gpt.rule"                      = "Host(`paperless-gpt.${var.domain}`)",
+    "traefik.http.routers.paperless-gpt.middlewares"               = "https-redirectscheme@file",
+    "traefik.http.routers.paperless-gpt.tls"                       = "true",
+    "traefik.http.services.paperless-gpt.loadbalancer.server.port" = "8080",
+  }
 }
