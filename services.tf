@@ -910,11 +910,11 @@ module "paperless_gpt" {
   ]
 
   env = [
-    "PAPERLESS_BASE_URL=http://paperless:8000",
+    "PAPERLESS_BASE_URL=${var.server_ip}:8010",
     "PAPERLESS_API_TOKEN=${var.paperless_api_token}",
     "LLM_PROVIDER=ollama",
     "LLM_MODEL=qwen3.5:4b",
-    "OLLAMA_HOST=http://ollama:11434",
+    "OLLAMA_HOST=${var.server_ip}:11434",
     "OLLAMA_CONTEXT_LENGTH=8192",
     "TOKEN_LIMIT=1000",
     "LLM_LANGUAGE=Lithuanian",
