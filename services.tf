@@ -868,7 +868,7 @@ module "paperless_ai" {
     "PAPERLESS_USERNAME=${var.paperless_admin_user}",
     "AI_PROVIDER=ollama",
     "OLLAMA_API_URL=${var.desktop_ollama_url}",
-    "OLLAMA_MODEL=qwen3.5:9b",
+    "OLLAMA_MODEL=gemma3:12b",
     "RAG_SERVICE_URL=http://localhost:8000",
     "RAG_SERVICE_ENABLED=true",
     "SCAN_INTERVAL=*/30 * * * *",
@@ -911,14 +911,14 @@ module "paperless_gpt" {
     "PAPERLESS_BASE_URL=http://paperless:8000",
     "PAPERLESS_API_TOKEN=${var.paperless_api_token}",
     "LLM_PROVIDER=ollama",
+    "LLM_MODEL=gemma3:12b",
     "OLLAMA_HOST=${var.desktop_ollama_url}",
-    "LLM_MODEL=qwen3.5:9b",
-    "VISION_LLM_MODEL=minicpm-v:8b",
     "OLLAMA_CONTEXT_LENGTH=8192",
     "TOKEN_LIMIT=1000",
     "LLM_LANGUAGE=Lithuanian",
     "OCR_PROVIDER=llm",
     "VISION_LLM_PROVIDER=ollama",
+    "VISION_LLM_MODEL=gemma3:12b",
     "AUTO_OCR_TAG=paperless-gpt-ocr-auto",
     "AUTO_TAG=paperless-gpt-auto",
     "MANUAL_TAG=paperless-gpt-manual",
@@ -926,8 +926,7 @@ module "paperless_gpt" {
     "PDF_OCR_COMPLETE_TAG=paperless-gpt-ocr-complete",
     "PDF_UPLOAD=false",
     "LOG_LEVEL=INFO",
-    "OCR_LIMIT_PAGES=0",
-
+    "OCR_LIMIT_PAGES=0"
   ]
 
   labels = {
