@@ -43,7 +43,7 @@ module "pi_stats" {
   source = "./modules/docker-service"
 
   name    = "pi-stats-tf"
-  image   = "nginx:1.31.6-alpine@sha256:adad2ae9204d0fd7a34f40299bc838c3782be1293b10005eac4315ff5a1abf4e" # 1.31.4-alpine
+  image   = "nginx:1.31.6-alpine@sha256:d10753d9289b8e3f884386351f73554ce72b631378949deddd75e83ee296c427" # 1.31.4-alpine
   restart = "unless-stopped"
 
   networks = [
