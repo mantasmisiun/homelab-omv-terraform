@@ -986,7 +986,7 @@ module "seafile_mariadb" {
   source = "./modules/docker-service"
 
   name    = "seafile-mysql"
-  image   = "docker.io/library/mariadb:10.11@sha256:8763a63f00ec980d913c04bf84f7fd5f60aa11ac9033f36d1a77921c065a5988"
+  image   = "docker.io/library/mariadb:10.11@sha256:7f22313fc130a377a44999965bcb0a08dd5b21e8502824c1b864f792f9bc66ab"
   restart = "always"
 
   networks = [{ name = docker_network.seafile.name, aliases = ["db"] }]
