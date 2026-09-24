@@ -939,3 +939,37 @@ module "paperless_gpt" {
     "traefik.http.services.paperless-gpt.loadbalancer.server.port" = "8080",
   }
 }
+
+module "backrest" {
+  source = "./modules/docker-service"
+
+  name    = "backrest"
+  image   = "docker.io/garethgeorge/backrest:v1.14.1@sha256:b852979754281026230cc69fb11428e6d57c9a97784ab4a444ffc7934c53a215"
+  restart = "always"
+
+  networks = [{ name = "proxy" }]
+
+  bind_mounts = [
+    { host_path = "${var.raid_root}/docker/backrest/config", container_path = "/config" },
+    { host_path = "${var.raid_root}/docker/backrest/data", container_path = "/data" },
+    { host_path = "${var.ssd_root}/backrest/cache", container_path = "/cache" },
+    { host_path = "${var.raid_root}/data/immich", container_path = "/userdata/immich", read_only = true },
+  ]
+
+  env = [
+    "TZ=${var.timezone}",
+    "BACKREST_DATA=/data",
+    "BACKREST_CONFIG=/config/config.json",
+    "XDG_CACHE_HOME=/cache",
+  ]
+
+  labels = {
+    "traefik.enable"                                          = "true",
+    "traefik.docker.network"                                  = "proxy",
+    "traefik.http.routers.backrest.entrypoints"               = "https",
+    "traefik.http.routers.backrest.rule"                      = "Host(`backrest.${var.domain}`)",
+    "traefik.http.routers.backrest.middlewares"               = "https-redirectscheme@file",
+    "traefik.http.routers.backrest.tls"                       = "true",
+    "traefik.http.services.backrest.loadbalancer.server.port" = "9898",
+  }
+}
