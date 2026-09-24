@@ -39,3 +39,7 @@ paperless_postgres_password = "password"
 paperless_admin_user = "admin"
 paperless_api_token = "api_token"
 paperless_secret_key= "secret_key"
+
+seafile_db_root_password = "password"
+seafile_admin_email      = "me@gmail.com"
+seafile_admin_password   = "password"

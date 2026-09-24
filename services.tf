@@ -686,6 +686,7 @@ module "paperless" {
     { host_path = "${var.raid_root}/data/paperless/media", container_path = "/usr/src/paperless/media" },
     { host_path = "${var.raid_root}/docker/paperless/export", container_path = "/usr/src/paperless/export" },
     { host_path = "${var.raid_root}/docker/paperless/consume", container_path = "/usr/src/paperless/consume" },
+    { host_path = "/opt/homelab-omv-terraform/files/paperless", container_path = "/usr/src/paperless/scripts", read_only = true },
   ]
 
   env = [
@@ -704,6 +705,9 @@ module "paperless" {
     "PAPERLESS_TIKA_ENDPOINT=http://tika:9998",
     "PAPERLESS_OCR_LANGUAGE=lit+eng",
     "PAPERLESS_OCR_LANGUAGES=lit",
+    "PAPERLESS_OCR_MODE=skip",
+    "PAPERLESS_POST_CONSUME_SCRIPT=/usr/src/paperless/scripts/post-consume.py",
+    "AUTO_OCR_API_TOKEN=${var.paperless_api_token}",
   ]
 
   labels = {
@@ -852,7 +856,7 @@ module "paperless_ai" {
     "PAPERLESS_USERNAME=${var.paperless_admin_user}",
     "AI_PROVIDER=ollama",
     "OLLAMA_API_URL=${var.desktop_ollama_url}",
-    "OLLAMA_MODEL=gemma3:12b",
+    "OLLAMA_MODEL=qwen3.5:9b",
     "RAG_SERVICE_URL=http://localhost:8000",
     "RAG_SERVICE_ENABLED=true",
     "SCAN_INTERVAL=*/30 * * * *",
@@ -895,14 +899,14 @@ module "paperless_gpt" {
     "PAPERLESS_BASE_URL=http://paperless:8000",
     "PAPERLESS_API_TOKEN=${var.paperless_api_token}",
     "LLM_PROVIDER=ollama",
-    "LLM_MODEL=gemma3:12b",
+    "LLM_MODEL=qwen3.5:9b",
     "OLLAMA_HOST=${var.desktop_ollama_url}",
     "OLLAMA_CONTEXT_LENGTH=8192",
     "TOKEN_LIMIT=1000",
     "LLM_LANGUAGE=Lithuanian",
     "OCR_PROVIDER=llm",
     "VISION_LLM_PROVIDER=ollama",
-    "VISION_LLM_MODEL=gemma3:12b",
+    "VISION_LLM_MODEL=minicpm-v",
     "AUTO_OCR_TAG=paperless-gpt-ocr-auto",
     "AUTO_TAG=paperless-gpt-auto",
     "MANUAL_TAG=paperless-gpt-manual",
@@ -910,7 +914,11 @@ module "paperless_gpt" {
     "PDF_OCR_COMPLETE_TAG=paperless-gpt-ocr-complete",
     "PDF_UPLOAD=false",
     "LOG_LEVEL=INFO",
-    "OCR_LIMIT_PAGES=0"
+    "OCR_LIMIT_PAGES=0",
+    "AUTO_GENERATE_TITLE=false",
+    "AUTO_GENERATE_TAGS=false",
+    "AUTO_GENERATE_CORRESPONDENTS=false",
+    "AUTO_GENERATE_CREATED_DATE=false",
   ]
 
   labels = {
