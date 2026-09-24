@@ -906,7 +906,7 @@ module "paperless_gpt" {
     "LLM_LANGUAGE=Lithuanian",
     "OCR_PROVIDER=llm",
     "VISION_LLM_PROVIDER=ollama",
-    "VISION_LLM_MODEL=minicpm-v",
+    "VISION_LLM_MODEL=minicpm-v:8b",
     "AUTO_OCR_TAG=paperless-gpt-ocr-auto",
     "AUTO_TAG=paperless-gpt-auto",
     "MANUAL_TAG=paperless-gpt-manual",
@@ -919,6 +919,8 @@ module "paperless_gpt" {
     "AUTO_GENERATE_TAGS=false",
     "AUTO_GENERATE_CORRESPONDENTS=false",
     "AUTO_GENERATE_CREATED_DATE=false",
+    "OCR_MAX_RETRIES=0",
+
   ]
 
   labels = {
