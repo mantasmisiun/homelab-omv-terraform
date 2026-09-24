@@ -420,22 +420,6 @@ module "adguard" {
   }
 }
 
-module "mailpit_souply_staging" {
-  source = "./modules/docker-service"
-
-  name    = "mailpit-staging"
-  image   = "axllent/mailpit:v1.31.2@sha256:74d609a42ec279aa63c6b4622a6fa9b5408d1ad5b1d76a1c4be40a265ce0863d"
-  restart = "unless-stopped"
-
-  networks = [
-    { name = docker_network.internal.name },
-  ]
-  ports = [
-    { external = 1025, internal = 1025, protocol = "tcp" },
-    { external = 8025, internal = 8025, protocol = "tcp" },
-  ]
-}
-
 module "vaultwarden" {
   source = "./modules/docker-service"
 

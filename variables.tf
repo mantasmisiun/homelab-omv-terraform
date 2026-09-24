@@ -20,15 +20,11 @@ variable "ssh_subdomain" {
 locals {
   tunnel_target = "${var.tunnel_id}.cfargotunnel.com"
   lab_instances = {
-    immich       = "photo library"
-    cloud        = "file sync"
-    vault        = "passwords"
-    minio        = "souply staging storage"
-    souply-api   = "souply staging server subdomain"
-    souply       = "souply staging website"
-    souply-minio = "souply dev minio storage"
-    obsidian     = "obsidian notes sync"
-    papra        = "Document ingestion and tagging service"
+    immich   = "photo library"
+    cloud    = "file sync"
+    vault    = "passwords"
+    obsidian = "obsidian notes sync"
+    papra    = "Document ingestion and tagging service"
   }
 }
 
