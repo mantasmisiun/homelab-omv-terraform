@@ -957,3 +957,98 @@ module "backrest" {
     "traefik.http.services.backrest.loadbalancer.server.port" = "9898",
   }
 }
+
+module "glances" {
+  source = "./modules/docker-service"
+
+  name         = "glances"
+  image        = "docker.io/nicolargo/glances:4.5.6-full@sha256:28e015d1ea437e4ed12c118b8a206991cfabdfc5c8c1a79af1bf39946066ad37"
+  restart      = "always"
+  network_mode = "host"
+  pid_mode     = "host"
+
+  bind_mounts = [
+    { host_path = "/var/run/docker.sock", container_path = "/var/run/docker.sock", read_only = true },
+    { host_path = "/", container_path = "/host", read_only = true },
+  ]
+
+  env = [
+    "TZ=${var.timezone}",
+    "GLANCES_OPT=-w",
+  ]
+
+  device_requests = [
+    { driver = "nvidia", count = -1, capabilities = ["gpu", "utility"] },
+  ]
+}
+
+module "seafile_mariadb" {
+  source = "./modules/docker-service"
+
+  name    = "seafile-mysql"
+  image   = "docker.io/library/mariadb:10.11@sha256:8763a63f00ec980d913c04bf84f7fd5f60aa11ac9033f36d1a77921c065a5988"
+  restart = "always"
+
+  networks = [{ name = docker_network.seafile.name, aliases = ["db"] }]
+
+  bind_mounts = [
+    { host_path = "${var.ssd_root}/seafile/db", container_path = "/var/lib/mysql" },
+  ]
+
+  env = [
+    "MYSQL_ROOT_PASSWORD=${var.seafile_db_root_password}",
+    "MYSQL_LOG_CONSOLE=true",
+    "MARIADB_AUTO_UPGRADE=1",
+  ]
+}
+
+module "memcached" {
+  source = "./modules/docker-service"
+
+  name    = "seafile-memcached"
+  image   = "docker.io/library/memcached:1.6.18@sha256:4ab520657d9919221f752771bb013d632c9b39cea9dfae9162244b2e39885bcd"
+  restart = "always"
+
+  networks = [{ name = docker_network.seafile.name, aliases = ["memcached"] }]
+
+  entrypoint = ["memcached", "-m", "256"]
+}
+
+module "seafile" {
+  source = "./modules/docker-service"
+
+  name       = "seafile"
+  image      = "docker.io/seafileltd/seafile-mc:10.0-latest@sha256:9f64f899c5a3678a79ff76625d0d20433c2191b82e7589bbb2744f8ffc489268"
+  restart    = "always"
+  depends_on = [module.memcached, module.seafile_mariadb]
+
+  networks = [
+    { name = docker_network.seafile.name },
+    { name = "proxy" },
+  ]
+
+  bind_mounts = [
+    { host_path = "${var.raid_root}/data/seafile", container_path = "/shared" },
+  ]
+
+  env = [
+    "DB_HOST=db",
+    "DB_ROOT_PASSWD=${var.seafile_db_root_password}",
+    "TIME_ZONE=${var.timezone}",
+    "SEAFILE_ADMIN_EMAIL=${var.seafile_admin_email}",
+    "SEAFILE_ADMIN_PASSWORD=${var.seafile_admin_password}",
+    "SEAFILE_SERVER_LETSENCRYPT=false",
+    "SEAFILE_SERVER_HOSTNAME=docs.seafile.com",
+  ]
+
+  labels = {
+    "traefik.enable"                                       = "true",
+    "traefik.docker.network"                               = "proxy",
+    "traefik.http.routers.cloud.entrypoints"               = "https",
+    "traefik.http.routers.cloud.rule"                      = "Host(`cloud.${var.domain}`)",
+    "traefik.http.routers.cloud.middlewares"               = "https-redirectscheme@file,immich-buffering@file",
+    "traefik.http.routers.cloud.tls"                       = "true",
+    "traefik.http.routers.cloud.tls.certresolver"          = "cloudflare",
+    "traefik.http.services.cloud.loadbalancer.server.port" = "80",
+  }
+}

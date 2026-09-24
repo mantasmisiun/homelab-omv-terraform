@@ -21,7 +21,9 @@ resource "docker_container" "this" {
     }
   }
   network_mode = var.network_mode
-  user         = var.user
+  pid_mode     = var.pid_mode
+
+  user = var.user
 
   dynamic "ports" {
     for_each = var.ports

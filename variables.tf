@@ -192,3 +192,19 @@ variable "desktop_ollama_url" {
   default     = "http://100.77.251.0:11434"
 }
 
+variable "seafile_db_root_password" {
+  type        = string
+  description = "Seafile MariaDB root password"
+  sensitive   = true
+}
+
+variable "seafile_admin_email" {
+  type        = string
+  description = "Email for seafile admin"
+}
+
+variable "seafile_admin_password" {
+  type        = string
+  description = "Seafile admin password"
+  sensitive   = true
+}

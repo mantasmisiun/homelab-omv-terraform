@@ -112,3 +112,9 @@ variable "command" {
   description = "Override the image's default command"
   default     = null
 }
+
+variable "pid_mode" {
+  type        = string
+  description = "Set to host to share the host's process namespace"
+  default     = null
+}
