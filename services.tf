@@ -1018,7 +1018,7 @@ module "seafile" {
   source = "./modules/docker-service"
 
   name       = "seafile"
-  image      = "docker.io/seafileltd/seafile-mc:10.0-latest@sha256:9f64f899c5a3678a79ff76625d0d20433c2191b82e7589bbb2744f8ffc489268"
+  image      = "docker.io/seafileltd/seafile-mc:13.0-latest@sha256:b0c90832126bf432db908449f1bb450211e6bbf75a2193bab3399e2a9636eccf"
   restart    = "always"
   depends_on = [module.memcached, module.seafile_mariadb]
 
