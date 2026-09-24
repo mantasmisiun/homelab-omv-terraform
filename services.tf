@@ -1006,7 +1006,7 @@ module "memcached" {
   source = "./modules/docker-service"
 
   name    = "seafile-memcached"
-  image   = "docker.io/library/memcached:1.6.18@sha256:4ab520657d9919221f752771bb013d632c9b39cea9dfae9162244b2e39885bcd"
+  image   = "docker.io/library/memcached:1.6.45@sha256:405a445c7c81bca205850426288baa5655c72859ae31d3de3fa823e6482be4ad"
   restart = "always"
 
   networks = [{ name = docker_network.seafile.name, aliases = ["memcached"] }]
