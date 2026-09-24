@@ -12,8 +12,6 @@ traefik_dashboard_credentials = "traefik_dashboard_credentials"
 raid_root     = "/raid/1"
 ssd_root      = "/ssd/1"
 
-papra_auth_secret = "papra1secrete"
-
 glance_ha_token   = "HA_token"
 glance_immich_key = "immich_key"
 
@@ -29,9 +27,6 @@ dockerhub_token = "token"
 
 couchdb_user     = "user"
 couchdb_password = "password"
-
-owlrelay_api_key     = "api_key"
-email_webhook_secret = "webhook_secret"
 
 paperless_postgres_db = "paperless"
 paperless_postgres_user = "paperless"

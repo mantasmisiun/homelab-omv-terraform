@@ -24,13 +24,7 @@ locals {
     cloud    = "file sync"
     vault    = "passwords"
     obsidian = "obsidian notes sync"
-    papra    = "Document ingestion and tagging service"
   }
-}
-
-variable "papra_auth_secret" {
-  type      = string
-  sensitive = true
 }
 
 variable "glance_ha_token" {
@@ -132,16 +126,6 @@ variable "dockerhub_token" {
 variable "cloudflare_account_id" {
   type        = string
   description = "Accoutn ID for cloudflare account for tunnel"
-}
-
-variable "owlrelay_api_key" {
-  type      = string
-  sensitive = true
-}
-
-variable "email_webhook_secret" {
-  type      = string
-  sensitive = true
 }
 
 variable "docker_host" {
