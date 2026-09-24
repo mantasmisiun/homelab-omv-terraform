@@ -55,52 +55,6 @@ module "pi_stats" {
   ]
 }
 
-module "papra" {
-  source = "./modules/docker-service"
-
-  name  = "papra"
-  image = "ghcr.io/papra-hq/papra:26.6.2-rootless@sha256:a281cb44176dbe5323e0f7ea2d6fd34d58914a3a8525c36437a086d1d7c4fef8"
-
-  restart = "unless-stopped"
-  bind_mounts = [
-    { host_path = "${var.raid_root}/docker/papra/app-data", container_path = "/app/app-data" },
-  ]
-  user = "1000:100"
-
-  ports = [
-    { external = 1221, internal = 1221 },
-  ]
-
-  networks = [
-    { name = "proxy" },
-  ]
-
-  env = [
-    "AUTH_SECRET=${var.papra_auth_secret}",
-    "APP_BASE_URL=https://papra.${var.domain}",
-    "TRUSTED_ORIGINS=http://${var.omv_ip}:1221,https://papra.${var.domain}",
-    "AUTH_IS_REGISTRATION_ENABLED=false",
-    "AUTH_IP_ADDRESS_HEADERS=x-forwarded-for",
-    "DOCUMENTS_OCR_LANGUAGES=lit,eng",
-    "DOCUMENT_STORAGE_MAX_UPLOAD_SIZE=104857600",
-    "INTAKE_EMAILS_IS_ENABLED=true",
-    "INTAKE_EMAILS_DRIVER=owlrelay",
-    "OWLRELAY_API_KEY=${var.owlrelay_api_key}",
-    "INTAKE_EMAILS_WEBHOOK_SECRET=${var.email_webhook_secret}",
-    "OWLRELAY_WEBHOOK_URL=https://papra.${var.domain}/api/intake-emails/ingest",
-  ]
-
-  labels = {
-    "traefik.enable"                                       = "true",
-    "traefik.docker.network"                               = "proxy",
-    "traefik.http.routers.papra.entrypoints"               = "https",
-    "traefik.http.routers.papra.rule"                      = "Host(`papra.${var.domain}`)",
-    "traefik.http.routers.papra.middlewares"               = "https-redirectscheme@file",
-    "traefik.http.routers.papra.tls"                       = "true",
-    "traefik.http.services.papra.loadbalancer.server.port" = "1221",
-  }
-}
-
 module "ollama" {
   source = "./modules/docker-service"
 
