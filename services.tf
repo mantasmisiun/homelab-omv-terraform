@@ -708,6 +708,8 @@ module "paperless" {
     "PAPERLESS_OCR_MODE=skip",
     "PAPERLESS_POST_CONSUME_SCRIPT=/usr/src/paperless/scripts/post-consume.py",
     "AUTO_OCR_API_TOKEN=${var.paperless_api_token}",
+    "PAPERLESS_DB_OPTIONS=pool.max_size=10",
+
   ]
 
   labels = {
