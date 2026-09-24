@@ -21,3 +21,8 @@ resource "docker_network" "paperless" {
   name   = "paperless"
   driver = "bridge"
 }
+
+resource "docker_network" "seafile" {
+  name   = "seafile"
+  driver = "bridge"
+}
