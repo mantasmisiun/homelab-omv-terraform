@@ -31,6 +31,7 @@ resource "docker_container" "this" {
       internal = ports.value.internal
       external = ports.value.external
       protocol = ports.value.protocol
+      ip       = ports.value.ip
     }
   }
 
