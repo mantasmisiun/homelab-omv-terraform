@@ -13,6 +13,7 @@ variable "ports" {
     internal = number
     external = number
     protocol = optional(string, "tcp")
+    ip       = optional(string, "0.0.0.0")
   }))
   default = []
 }

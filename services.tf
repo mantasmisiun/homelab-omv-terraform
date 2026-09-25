@@ -340,8 +340,8 @@ module "adguard" {
   restart = "always"
 
   ports = [
-    { external = 53, internal = 53, protocol = "tcp" },
-    { external = 53, internal = 53, protocol = "udp" },
+    { external = 53, internal = 53, protocol = "tcp", ip = "192.168.1.212" },
+    { external = 53, internal = 53, protocol = "udp", ip = "192.168.1.212" },
     { external = 81, internal = 80, protocol = "tcp" },
   ]
 
