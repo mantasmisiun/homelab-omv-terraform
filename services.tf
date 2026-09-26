@@ -928,7 +928,7 @@ module "glances" {
   source = "./modules/docker-service"
 
   name         = "glances"
-  image        = "docker.io/nicolargo/glances:4.5.6-full@sha256:28e015d1ea437e4ed12c118b8a206991cfabdfc5c8c1a79af1bf39946066ad37"
+  image        = "docker.io/nicolargo/glances:4.5.7-full@sha256:af1b6ccd3c33f7ac821e30b7dd58946542ce3e252b225dc3d678a1ca48f1007b"
   restart      = "always"
   network_mode = "host"
   pid_mode     = "host"
